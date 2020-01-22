@@ -29,7 +29,7 @@ export function generateEnumTSFile(swagger: Swagger, options: GeneratorOptions) 
             generateClasses: options.generateClasses,
             enumTypeCollection: enumTypeCollection
         };
-        let template = readAndCompileTemplateFile(options.templates.enum);
+        let template = readAndCompileTemplateFile(options.templates.enum, options.templates.helpers);
         let result = template(data);
         let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
         if (isChanged) {
@@ -51,13 +51,14 @@ export function generateEnumI18NHtmlFile(swagger: Swagger, options: GeneratorOpt
             enumTypeCollection
         };
         let template = readAndCompileTemplateFile(
-            options.templates.enumLanguage
+            options.templates.enumLanguage,
+            options.templates.helpers
         );
         let result = template(data);
         let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
         if (isChanged) {
             log(
-                `generated ${enumTypeCollection.length}  enums in ${outputFileName}`
+                `generated ${enumTypeCollection.length} enums in ${outputFileName}`
             );
         }
     }

@@ -1,3 +1,5 @@
+import { HelperDelegate } from "handlebars";
+
 export interface GeneratorOptions {
   modelFolder: string;
   enumTSFile: string;
@@ -30,5 +32,10 @@ export interface GeneratorOptions {
     barrel?: string;
     enum?: string;
     enumLanguage?: string;
+    helpers?: HelperList;
   };
+}
+
+export type HelperList = {
+  [helperName: string]: HelperDelegate;
 }

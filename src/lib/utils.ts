@@ -1,14 +1,15 @@
 import { readFileSync, writeFileSync, existsSync, mkdirSync, readdirSync, statSync, lstatSync, unlinkSync, rmdirSync } from 'fs';
 import { dirname, join } from 'path';
-import { compile } from 'handlebars';
+import { compile, registerHelper } from 'handlebars';
 import * as moment from 'moment';
 import { kebabCase, find, sortBy, toPairs, fromPairs } from 'lodash';
 import { SwaggerDefinition } from '../bootstrap/swagger';
-import { GeneratorOptions } from '../bootstrap/options';
+import { GeneratorOptions, HelperList } from '../bootstrap/options';
 
 export const ENCODING = 'utf8';
 
-export function readAndCompileTemplateFile(templatePath: string) {
+export function readAndCompileTemplateFile(templatePath: string, helperList?: HelperList) {
+    registerTemplateHelpers(helperList);
     let templateSource = readFileSync(templatePath, ENCODING);
     let template = compile(templateSource);
     return template;
@@ -21,6 +22,14 @@ function readFile(outputFileName: string) {
 
 function writeFile(outputFileName: string, contents: string) {
     writeFileSync(outputFileName, contents, { flag: 'w', encoding: ENCODING });
+}
+
+export function registerTemplateHelpers(helperList: HelperList = {}): void {
+    for (let helperName in helperList) {
+        if (helperList.hasOwnProperty(helperName)) {
+            registerHelper(helperName, helperList[helperName]);
+        }
+    }
 }
 
 export function writeFileIfContentsIsChanged(outputFileName: string, contents: string) {

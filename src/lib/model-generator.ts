@@ -132,7 +132,7 @@ function generateTSValidations(folder: string, options: GeneratorOptions) {
 
     let outputFileName = join(folder, options.validatorsFileName);
     let data = {};
-    let template = readAndCompileTemplateFile(options.templates.validators);
+    let template = readAndCompileTemplateFile(options.templates.validators, options.templates.helpers);
     let result = template(data);
     ensureFolder(folder);
     let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
@@ -149,7 +149,7 @@ function generateTSBaseModel(folder: string, options: GeneratorOptions) {
         subTypePropertyName: options.subTypePropertyName,
         generateFormGroups: options.generateFormGroups
     };
-    let template = readAndCompileTemplateFile(options.templates.baseModel);
+    let template = readAndCompileTemplateFile(options.templates.baseModel, options.templates.helpers);
     let result = template(data);
     ensureFolder(folder);
     let isChanged = writeFileIfContentsIsChanged(outputFileName, result);
@@ -771,7 +771,7 @@ function generateTSModels(namespaceGroups: NamespaceGroups, folder: string, opti
         type: undefined
     };
     //   console.log(data);
-    let template = readAndCompileTemplateFile(options.templates.models);
+    let template = readAndCompileTemplateFile(options.templates.models, options.templates.helpers);
     ensureFolder(folder);
     for (let namespace in namespaceGroups) {
         let typeCol = namespaceGroups[namespace];
@@ -833,7 +833,7 @@ function generateSubTypeFactory(namespaceGroups: NamespaceGroups, folder: string
         subTypePropertyName: options.subTypePropertyName,
         generateFormGroups: options.generateFormGroups
     };
-    let template = readAndCompileTemplateFile(options.templates.subTypeFactory);
+    let template = readAndCompileTemplateFile(options.templates.subTypeFactory, options.templates.helpers);
     for (let key in namespaceGroups) {
         data.subTypes = namespaceGroups[key].filter(type => {
             return type.hasSubTypeProperty;
@@ -853,7 +853,7 @@ function generateBarrelFiles(namespaceGroups: NamespaceGroups, folder: string, o
     let data: { fileNames: string[] } = {
         fileNames: undefined
     };
-    let template = readAndCompileTemplateFile(options.templates.barrel);
+    let template = readAndCompileTemplateFile(options.templates.barrel, options.templates.helpers);
 
     for (let key in namespaceGroups) {
         data.fileNames = namespaceGroups[key].map(type => {
